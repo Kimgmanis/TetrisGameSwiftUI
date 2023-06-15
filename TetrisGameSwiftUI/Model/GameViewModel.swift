@@ -72,9 +72,38 @@ class GameViewModel: ObservableObject {
         }
     }
 
-
     func rotatePiece() {
-        // TODO: Implement this
+        guard let currentPiece = currentPiece else { return }
+
+        let newBlocks: [Block]
+
+        switch currentPiece.blocks.count {
+        case 4:
+            // O-block : It does not rotate
+            newBlocks = currentPiece.blocks
+        case 3:
+            // I-block : rotate 90 degrees
+            let centerBlock = currentPiece.blocks[1] // Rotate on the 2nd block
+            newBlocks = currentPiece.blocks.enumerated().map { index, block in 
+                let x = block.x - centerBlock.x // calculate block relative to center block
+                let y = block.y - centerBlock.y
+                return Block(x: centerBlock.x - y, y: centerBlock.y + x, color: block.color) // Add new x,y to center of coordinates
+            }
+        default:
+            // J-block, L-block, S-block, T-block, Z-block : Rotate 90 degrees
+            let centerBlock = currentPiece.blocks[1]
+            newBlocks = currentPiece.blocks.map { block in
+                let x = block.x - centerBlock.x
+                let y = block.y - centerBlock.y
+                return Block(x: centerBlock.x - y, y: centerBlock.y + x, color: block.color)
+            }
+        }
+
+        let newPiece = Piece(blocks: newBlocks)
+
+        if isValidPiece(newPiece) {
+            self.currentPiece = newPiece
+        }
     }
     
     // Down by 1 row
