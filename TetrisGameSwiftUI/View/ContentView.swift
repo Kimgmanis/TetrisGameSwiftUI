@@ -14,7 +14,13 @@ struct ContentView: View {
         VStack {
             GameView(viewModel: gameViewModel)
             VStack{ // Controls
+                NextPieceView(piece: gameViewModel.nextPiece ?? Piece(blocks: [])) // Displays next piece
                 HStack{
+                    Button(action: { // Pause
+                        gameViewModel.paused.toggle()
+                    }) {
+                        Text(gameViewModel.paused ? "Resume" : "Pause")
+                    }.padding()
                     Spacer()
                     Button(action: {
                         gameViewModel.startNewGame()

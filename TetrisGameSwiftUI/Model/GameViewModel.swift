@@ -8,6 +8,18 @@
 import Foundation
 import SwiftUI
 
+// struct that will represent each block in a Tetris piece
+struct Block: Hashable {
+    var x: Int
+    var y: Int
+    var color: Color
+}
+
+// struct that will represent a Tetris piece. Each piece is made up of four blocks
+struct Piece {
+    var blocks: [Block]
+}
+
 // Handels game logic
 class GameViewModel: ObservableObject {
     //The game board is a 2D array of blocks.
@@ -16,23 +28,30 @@ class GameViewModel: ObservableObject {
     @Published var nextPiece: Piece? // Next piece that will fall
     @Published var gameBoard: [[Block?]] = Array(repeating: Array(repeating: nil, count: 10), count: 20)
     @Published var gameOver: Bool = false
+    @Published var paused: Bool = false
     @Published var score: Int = 0
+    
 
     init() {
         gameBoard = Array(repeating: Array(repeating: nil, count: 10), count: 20)
     }
     
-    // struct that will represent each block in a Tetris piece
-    struct Block {
-        var x: Int
-        var y: Int
-        var color: Color
-    }
-
-    // struct that will represent a Tetris piece. Each piece is made up of four blocks
-    struct Piece {
-        var blocks: [Block]
-    }
+    private var timer: Timer? // Timer
+    
+    func startNewGame() { // Initializes currentPiece and nextPiece and clears the gameBoard
+        gameBoard = Array(repeating: Array(repeating: nil, count: 10), count: 20)
+        currentPiece = generateRandomPiece()
+        nextPiece = generateRandomPiece()
+        
+        timer?.invalidate()
+            timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+                if self.gameOver { // Game over
+                    self.timer?.invalidate() // Stops loop
+                } else { // Move Piece down every second
+                    self.movePieceDown()
+                }
+            }
+        }
 
     func movePieceLeft() {
         guard let currentPiece = currentPiece else { return }
@@ -111,13 +130,6 @@ class GameViewModel: ObservableObject {
             
             clearLines() // Clears lines
         }
-    }
-
-
-    func startNewGame() { // Initializes currentPiece and nextPiece and clears the gameBoard
-        gameBoard = Array(repeating: Array(repeating: nil, count: 10), count: 20)
-        currentPiece = generateRandomPiece()
-        nextPiece = generateRandomPiece()
     }
     
     // Checks for collision/within gameBoard
