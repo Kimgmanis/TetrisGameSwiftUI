@@ -11,33 +11,17 @@ import SwiftUI
 // Handels game logic
 class GameViewModel: ObservableObject {
     //The game board is a 2D array of blocks.
-    @Published var gameBoard: [[Block?]]
+    //@Published var gameBoard: [[Block?]]
     @Published var currentPiece: Piece? // Represents the piece that is falling
     @Published var nextPiece: Piece? // Next piece that will fall
-
+    @Published var gameBoard: [[Block?]] = Array(repeating: Array(repeating: nil, count: 10), count: 20)
+    @Published var gameOver: Bool = false
+    @Published var score: Int = 0
 
     init() {
         gameBoard = Array(repeating: Array(repeating: nil, count: 10), count: 20)
     }
     
-    // Checks for collision/within gameBoard
-    func isValidPiece(_ piece: Piece) -> Bool {
-        for block in piece.blocks {
-            // Check if the block is outside the game board
-            if block.x < 0 || block.x >= 10 || block.y < 0 || block.y >= 20 {
-                return false
-            }
-
-            // Check if the block collides with an existing block
-            if gameBoard[block.y][block.x] != nil {
-                return false
-            }
-        }
-        
-        // if none of the blocks collide with a bloc kwe return true
-        return true
-    }
-
     // struct that will represent each block in a Tetris piece
     struct Block {
         var x: Int
@@ -124,6 +108,8 @@ class GameViewModel: ObservableObject {
             // Continue to next piece
             self.currentPiece = nextPiece
             nextPiece = generateRandomPiece()
+            
+            clearLines() // Clears lines
         }
     }
 
@@ -134,56 +120,84 @@ class GameViewModel: ObservableObject {
         nextPiece = generateRandomPiece()
     }
     
+    // Checks for collision/within gameBoard
+    func isValidPiece(_ piece: Piece) -> Bool {
+        for block in piece.blocks {
+            // Check if the block is outside the game board
+            if block.x < 0 || block.x >= 10 || block.y < 0 || block.y >= 20 {
+                return false
+            }
+
+            // Check if the block collides with an existing block
+            if gameBoard[block.y][block.x] != nil {
+                return false
+            }
+        }
+        
+        // if none of the blocks collide with a bloc kwe return true
+        return true
+    }
+    
+    func clearLines() {
+        for (y, row) in gameBoard.enumerated().reversed() {
+            if row.allSatisfy({ $0 != nil }) {
+                gameBoard.remove(at: y)
+                gameBoard.insert(Array(repeating: nil, count: 10), at: 0)
+                score += 100
+            }
+        }
+    }
+    
     // Generating random index and return Tetris piece based on index
     func generateRandomPiece() -> Piece {
         let randomIndex = Int.random(in: 0..<7)
         let color = Color.red // You can change this to generate a random color if you want
 
         switch randomIndex {
-            case 0:
-                // I-block
-                return Piece(blocks: [Block(x: 4, y: 0, color: color),
-                                      Block(x: 5, y: 0, color: color),
-                                      Block(x: 6, y: 0, color: color),
-                                      Block(x: 7, y: 0, color: color)])
-            case 1:
-                // J-block
-                return Piece(blocks: [Block(x: 4, y: 0, color: color),
-                                      Block(x: 5, y: 0, color: color),
-                                      Block(x: 6, y: 0, color: color),
-                                      Block(x: 6, y: 1, color: color)])
-            case 2:
-                // L-block
-                return Piece(blocks: [Block(x: 4, y: 0, color: color),
-                                      Block(x: 5, y: 0, color: color),
-                                      Block(x: 6, y: 0, color: color),
-                                      Block(x: 4, y: 1, color: color)])
-            case 3:
-                // O-block
-                return Piece(blocks: [Block(x: 4, y: 0, color: color),
-                                      Block(x: 5, y: 0, color: color),
-                                      Block(x: 4, y: 1, color: color),
-                                      Block(x: 5, y: 1, color: color)])
-            case 4:
-                // S-block
-                return Piece(blocks: [Block(x: 4, y: 1, color: color),
-                                      Block(x: 5, y: 1, color: color),
-                                      Block(x: 5, y: 0, color: color),
-                                      Block(x: 6, y: 0, color: color)])
-            case 5:
-                // T-block
-                return Piece(blocks: [Block(x: 4, y: 0, color: color),
-                                      Block(x: 5, y: 0, color: color),
-                                      Block(x: 6, y: 0, color: color),
-                                      Block(x: 5, y: 1, color: color)])
-            case 6:
-                // Z-block
-                return Piece(blocks: [Block(x: 4, y: 0, color: color),
-                                      Block(x: 5, y: 0, color: color),
-                                      Block(x: 5, y: 1, color: color),
-                                      Block(x: 6, y: 1, color: color)])
-            default:
-                return Piece(blocks: [])
-            }
+        case 0:
+            // I-block
+            return Piece(blocks: [Block(x: 4, y: 0, color: color),
+                                  Block(x: 5, y: 0, color: color),
+                                  Block(x: 6, y: 0, color: color),
+                                  Block(x: 7, y: 0, color: color)])
+        case 1:
+            // J-block
+            return Piece(blocks: [Block(x: 4, y: 0, color: color),
+                                  Block(x: 5, y: 0, color: color),
+                                  Block(x: 6, y: 0, color: color),
+                                  Block(x: 6, y: 1, color: color)])
+        case 2:
+            // L-block
+            return Piece(blocks: [Block(x: 4, y: 0, color: color),
+                                  Block(x: 5, y: 0, color: color),
+                                  Block(x: 6, y: 0, color: color),
+                                  Block(x: 4, y: 1, color: color)])
+        case 3:
+            // O-block
+            return Piece(blocks: [Block(x: 4, y: 0, color: color),
+                                  Block(x: 5, y: 0, color: color),
+                                  Block(x: 4, y: 1, color: color),
+                                  Block(x: 5, y: 1, color: color)])
+        case 4:
+            // S-block
+            return Piece(blocks: [Block(x: 4, y: 1, color: color),
+                                  Block(x: 5, y: 1, color: color),
+                                  Block(x: 5, y: 0, color: color),
+                                  Block(x: 6, y: 0, color: color)])
+        case 5:
+            // T-block
+            return Piece(blocks: [Block(x: 4, y: 0, color: color),
+                                  Block(x: 5, y: 0, color: color),
+                                  Block(x: 6, y: 0, color: color),
+                                  Block(x: 5, y: 1, color: color)])
+        case 6:
+            // Z-block
+            return Piece(blocks: [Block(x: 4, y: 0, color: color),
+                                  Block(x: 5, y: 0, color: color),
+                                  Block(x: 5, y: 1, color: color),
+                                  Block(x: 6, y: 1, color: color)])
+        default:
+            return Piece(blocks: [])
+        }
     }
 }
