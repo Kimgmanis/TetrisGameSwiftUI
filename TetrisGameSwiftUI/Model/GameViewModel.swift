@@ -24,4 +24,25 @@ class GameViewModel: ObservableObject {
     struct Piece {
         var blocks: [Block]
     }
+
+    func movePieceLeft() {
+        // TODO: Implement this
+    }
+
+    func movePieceRight() {
+        // TODO: Implement this
+    }
+
+    func rotatePiece() {
+        // TODO: Implement this
+    }
+
+    func dropPiece() {
+        // TODO: Implement this
+    }
+
+    func startNewGame() {
+        // TODO: Implement this
+    }
 }
+

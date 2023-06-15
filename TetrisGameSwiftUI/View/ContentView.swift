@@ -8,16 +8,52 @@
 import SwiftUI
 
 struct ContentView: View {
+    @ObservedObject var gameViewModel = GameViewModel()
+
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundColor(.accentColor)
-            Text("Hello, world!")
+            GameView(viewModel: gameViewModel)
+            VStack{
+                HStack{
+                    Spacer()
+                    Button(action: {
+                        gameViewModel.startNewGame()
+                    }) {
+                        Text("New Game")
+                    }.padding()
+                }
+                VStack {
+                    HStack{
+                        Button(action: {
+                            gameViewModel.rotatePiece()
+                        }) {
+                            Image(systemName: "rotate.right")
+                        }.padding()
+                    }
+                    HStack{
+                        Button(action: {
+                            gameViewModel.movePieceLeft()
+                        }) {
+                            Image(systemName: "arrow.left")
+                        }.padding()
+                        Button(action: {
+                            gameViewModel.dropPiece()
+                        }) {
+                            Image(systemName: "arrow.down")
+                        }.padding()
+                        Button(action: {
+                            gameViewModel.movePieceRight()
+                        }) {
+                            Image(systemName: "arrow.right")
+                        }.padding()
+                    }
+                }
+            }
         }
-        .padding()
     }
 }
+
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
