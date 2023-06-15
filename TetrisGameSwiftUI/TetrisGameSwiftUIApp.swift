@@ -12,7 +12,7 @@ struct TetrisGameSwiftUIApp: App {
     var body: some Scene {
         WindowGroup {
             GameView(viewModel: GameViewModel())
-            // ContentView()
+            ContentView()
         }
     }
 }

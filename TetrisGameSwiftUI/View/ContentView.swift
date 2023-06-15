@@ -13,7 +13,7 @@ struct ContentView: View {
     var body: some View {
         VStack {
             GameView(viewModel: gameViewModel)
-            VStack{
+            VStack{ // Controls
                 HStack{
                     Spacer()
                     Button(action: {
@@ -37,7 +37,7 @@ struct ContentView: View {
                             Image(systemName: "arrow.left")
                         }.padding()
                         Button(action: {
-                            gameViewModel.dropPiece()
+                            gameViewModel.movePieceDown()
                         }) {
                             Image(systemName: "arrow.down")
                         }.padding()
