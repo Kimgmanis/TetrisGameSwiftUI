@@ -15,6 +15,7 @@ struct ContentView: View {
     }
 }
 
+/*
 // GameView will display the game board
 struct GameView: View {
     @ObservedObject var viewModel: GameViewModel
@@ -33,10 +34,10 @@ struct GameView: View {
             }
         }
     }
-}
+}*/
 
 // Displays next piece
-struct NextPieceView: View {
+/*struct NextPieceView: View {
     var piece: Piece
 
     var body: some View {
@@ -50,7 +51,8 @@ struct NextPieceView: View {
             }
         }
     }
-}
+}*/
+
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
