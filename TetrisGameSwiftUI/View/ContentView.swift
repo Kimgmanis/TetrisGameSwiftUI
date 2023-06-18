@@ -9,65 +9,9 @@ import SwiftUI
 
 struct ContentView: View {
     @ObservedObject var gameViewModel = GameViewModel()
-
+    
     var body: some View {
-        VStack {
-            Text("High Score: \(gameViewModel.highScore)")
-            ZStack {
-                GameView(viewModel: gameViewModel)
-                NextPieceView(piece: gameViewModel.nextPiece ?? Piece(blocks: [])) // next piece
-                VStack {
-                    Spacer()
-                    HStack {
-                        Button(action: { // Pause
-                            gameViewModel.paused.toggle()
-                        }) {
-                            Text(gameViewModel.paused ? "Resume" : "Pause")
-                        }.padding()
-                        Spacer()
-                        Button(action: {
-                            gameViewModel.startNewGame()
-                        }) {
-                            Text("New Game")
-                        }.padding()
-                    }
-                    VStack {
-                        HStack{
-                            Button(action: {
-                                withAnimation(.easeOut(duration: 0.1)) {
-                                    gameViewModel.rotatePiece()
-                                }
-                            }) {
-                                Image(systemName: "rotate.right")
-                            }.padding()
-                        }
-                        HStack{
-                            Button(action: {
-                                withAnimation(.easeOut(duration: 0.1)) {
-                                    gameViewModel.movePieceLeft()
-                                }
-                            }) {
-                                Image(systemName: "arrow.left")
-                            }.padding()
-                            Button(action: {
-                                withAnimation(.easeOut(duration: 0.1)) {
-                                    gameViewModel.movePieceDown()
-                                }
-                            }) {
-                                Image(systemName: "arrow.down")
-                            }.padding()
-                            Button(action: {
-                                withAnimation(.easeOut(duration: 0.1)) {
-                                    gameViewModel.movePieceRight()
-                                }
-                            }) {
-                                Image(systemName: "arrow.right")
-                            }.padding()
-                        }
-                    }
-                }
-            }
-        }
+        TetrisGameView()
     }
 }
 
@@ -112,3 +56,62 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
+    /*VStack {
+        Text("High Score: \(gameViewModel.highScore)")
+        ZStack {
+            GameView(viewModel: gameViewModel)
+            NextPieceView(piece: gameViewModel.nextPiece ?? Piece(blocks: [])) // next piece
+            VStack {
+                Spacer()
+                HStack {
+                    Button(action: { // Pause
+                        gameViewModel.paused.toggle()
+                    }) {
+                        Text(gameViewModel.paused ? "Resume" : "Pause")
+                    }.padding()
+                    Spacer()
+                    Button(action: {
+                        gameViewModel.startNewGame()
+                    }) {
+                        Text("New Game")
+                    }.padding()
+                }
+                VStack {
+                    HStack{
+                        Button(action: {
+                            withAnimation(.easeOut(duration: 0.1)) {
+                                gameViewModel.rotatePiece()
+                            }
+                        }) {
+                            Image(systemName: "rotate.right")
+                        }.padding()
+                    }
+                    HStack{
+                        Button(action: {
+                            withAnimation(.easeOut(duration: 0.1)) {
+                                gameViewModel.movePieceLeft()
+                            }
+                        }) {
+                            Image(systemName: "arrow.left")
+                        }.padding()
+                        Button(action: {
+                            withAnimation(.easeOut(duration: 0.1)) {
+                                gameViewModel.movePieceDown()
+                            }
+                        }) {
+                            Image(systemName: "arrow.down")
+                        }.padding()
+                        Button(action: {
+                            withAnimation(.easeOut(duration: 0.1)) {
+                                gameViewModel.movePieceRight()
+                            }
+                        }) {
+                            Image(systemName: "arrow.right")
+                        }.padding()
+                    }
+                }
+            }
+        }
+    }
+}*/
